@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { supabase } from '../lib/supabase'
+
+const router = useRouter()
 
 const email = ref('')
 const password = ref('')
@@ -31,8 +34,8 @@ async function handleSignIn() {
     return
   }
 
-  successMessage.value = 'Signed in successfully!'
   loading.value = false
+  router.push('/')
 }
 </script>
 

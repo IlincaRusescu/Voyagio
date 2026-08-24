@@ -6,6 +6,7 @@ const userEmail = ref('')
 const firstName = ref('')
 const loading = ref(true)
 const errorMessage = ref('')
+const logoutMessage = ref('')
 
 async function loadUser() {
   errorMessage.value = ''
@@ -47,8 +48,11 @@ async function handleLogout() {
     return
   }
 
-  userEmail.value = ''
-  firstName.value = ''
+  logoutMessage.value = 'You have been logged out successfully.'
+
+  setTimeout(() => {
+    window.location.replace('/signin')
+  }, 2000)
 }
 
 onMounted(() => {
@@ -72,6 +76,10 @@ onMounted(() => {
       <button @click="handleLogout">
         Log out
       </button>
+
+      <p v-if="logoutMessage">
+        {{ logoutMessage }}
+      </p>
     </div>
 
     <div v-else>

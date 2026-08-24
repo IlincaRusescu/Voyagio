@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { supabase } from '../lib/supabase'
+
+const router = useRouter()
 
 const firstName = ref('')
 const lastName = ref('')
@@ -84,8 +87,8 @@ async function handleSignUp() {
     return
   }
 
-  successMessage.value = 'Account created successfully!'
   loading.value = false
+  router.push('/')
 }
 </script>
 
