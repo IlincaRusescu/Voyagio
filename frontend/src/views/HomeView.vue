@@ -1,13 +1,14 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { supabase } from '../lib/supabase'
+import { useRouter } from 'vue-router'
 
 const userEmail = ref('')
 const firstName = ref('')
 const loading = ref(true)
 const errorMessage = ref('')
 const logoutMessage = ref('')
-const backendMessage = ref('')
+const router = useRouter()
 
 async function loadUser() {
   errorMessage.value = ''
@@ -56,36 +57,8 @@ async function handleLogout() {
   }, 2000)
 }
 
-async function testBackendAuth() {
-  backendMessage.value = ''
-
-  const {
-    data: { session }
-  } = await supabase.auth.getSession()
-
-  if (!session) {
-    backendMessage.value = 'No active session found.'
-    return
-  }
-
-  try {
-    const response = await fetch('http://localhost:3000/api/me', {
-      headers: {
-        Authorization: `Bearer ${session.access_token}`
-      }
-    })
-
-    const data = await response.json()
-
-    if (!response.ok) {
-      backendMessage.value = data.error || 'Backend authentication failed.'
-      return
-    }
-
-    backendMessage.value = `Backend verified: ${data.email}`
-  } catch (error) {
-    backendMessage.value = 'Could not connect to the backend.'
-  }
+function goToCreateTrip() {
+  router.push('/create-trip')
 }
 
 onMounted(() => {
@@ -110,13 +83,9 @@ onMounted(() => {
         Log out
       </button>
 
-      <button @click="testBackendAuth">
-        Test backend auth
+      <button @click="goToCreateTrip">
+        Create Trip
       </button>
-
-      <p v-if="backendMessage">
-        {{ backendMessage }}
-      </p>
 
       <p v-if="logoutMessage">
         {{ logoutMessage }}

@@ -4,6 +4,7 @@ import HomeView from '../views/HomeView.vue'
 import SignIn from '../views/SignIn.vue'
 import SignUp from '../views/SignUp.vue'
 import { supabase } from '../lib/supabase'
+import CreateTripView from '../views/CreateTripView.vue'
 
 const routes = [
   {
@@ -23,6 +24,14 @@ const routes = [
     path: '/signup',
     name: 'signup',
     component: SignUp
+  },
+  {
+  path: '/create-trip',
+  name: 'create-trip',
+  component: CreateTripView,
+  meta: {
+    requiresAuth: true
+  }
   }
 ]
 
