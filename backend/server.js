@@ -6,6 +6,7 @@ const { createClient } = require('@supabase/supabase-js')
 
 const placesRouter = require('./routes/places')
 const routesRouter = require('./routes/routes')
+const aiRouter = require('./routes/ai')
 
 const app = express()
 const PORT = 3000
@@ -127,6 +128,7 @@ app.post('/api/locations/validate', async (req, res) => {
 // Google Places routes
 app.use('/api/places', placesRouter)
 app.use('/api/routes', routesRouter)
+app.use('/api/ai', aiRouter)
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`)
