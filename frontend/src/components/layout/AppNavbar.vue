@@ -55,7 +55,7 @@
             class="token-icon"
           />
 
-          <span>0</span>
+          <span>{{ tokenBalance }}</span>
         </button>
 
         <!-- PROFILE DROPDOWN -->
@@ -64,7 +64,7 @@
             type="button"
             class="profile-button"
           >
-            Hi, {{ firstName || 'Traveler' }}
+            Hi, {{ firstName }}
           </button>
 
           <div class="profile-dropdown">
@@ -176,7 +176,7 @@
           class="token-icon"
         />
 
-        <span>0 tokens</span>
+        <span>{{ tokenBalance }} tokens</span>
       </div>
 
       <RouterLink
@@ -223,42 +223,31 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { supabase } from '../../lib/supabase'
+import { useUserStore } from '../../stores/userStore'
 
 import logoAppLight from '../../assets/logo_app_light.svg'
 import logoTokensLight from '../../assets/logo_tokens_light.svg'
 
 const router = useRouter()
+const userStore = useUserStore()
 
 const mobileMenuOpen = ref(false)
-const isPremium = ref(false)
-const firstName = ref('')
 
-async function loadUserProfile() {
-  const {
-    data: { user }
-  } = await supabase.auth.getUser()
+const firstName = computed(() => {
+  return userStore.profile?.first_name || 'Traveler'
+})
 
-  if (!user) {
-    return
-  }
+const isPremium = computed(() => {
+  return userStore.isPremium
+})
 
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('first_name')
-    .eq('id', user.id)
-    .single()
-
-  if (error) {
-    console.error('Profile loading error:', error)
-    return
-  }
-
-  firstName.value = data?.first_name || ''
-}
+const tokenBalance = computed(() => {
+  return userStore.tokenBalance
+})
 
 function toggleMobileMenu() {
   mobileMenuOpen.value = !mobileMenuOpen.value
@@ -276,13 +265,15 @@ async function handleLogout() {
     return
   }
 
+  userStore.clearUser()
+
   closeMobileMenu()
 
   router.push('/signin')
 }
 
 onMounted(() => {
-  loadUserProfile()
+  userStore.loadUser()
 })
 </script>
 
@@ -331,8 +322,8 @@ onMounted(() => {
 }
 
 .brand-logo {
-  width: 72px;
-  height: 72px;
+  width: 65px;
+  height: 65px;
 
   object-fit: contain;
 

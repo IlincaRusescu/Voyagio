@@ -8,6 +8,8 @@ const placesRouter = require('./routes/places')
 const routesRouter = require('./routes/routes')
 const aiRouter = require('./routes/ai')
 
+const validationRoutes = require('./routes/validation')
+
 const app = express()
 const PORT = 3000
 
@@ -19,14 +21,21 @@ const supabase = createClient(
   process.env.SUPABASE_PUBLISHABLE_KEY
 )
 
-// Test backend
-app.get('/api/test', (req, res) => {
+const supabaseAdmin = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SECRET_KEY
+)
+
+app.use('/api/validation', validationRoutes(supabaseAdmin))
+
+// Health check
+app.get('/api/health', (req, res) => {
   res.json({
-    message: 'Voyagio API is working'
+    message: 'ok'
   })
 })
 
-// Test authenticated user
+// Current authenticated user
 app.get('/api/me', async (req, res) => {
   const authHeader = req.headers.authorization
 
@@ -38,20 +47,55 @@ app.get('/api/me', async (req, res) => {
 
   const token = authHeader.replace('Bearer ', '')
 
+  // Verificăm dacă token-ul aparține unui user real
   const {
     data: { user },
-    error
+    error: userError
   } = await supabase.auth.getUser(token)
 
-  if (error || !user) {
+  if (userError || !user) {
     return res.status(401).json({
       error: 'Invalid or expired token'
     })
   }
 
+  // Cream un client Supabase care foloseste token-ul userului.
+  // Astfel, RLS stie cine face request-ul.
+  const userSupabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_PUBLISHABLE_KEY,
+    {
+      global: {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    }
+  )
+
+  const {
+    data: profile,
+    error: profileError
+  } = await userSupabase
+    .from('profiles')
+    .select(
+      'first_name, last_name, username, country, plan, token_balance, avatar_url'
+    )
+    .eq('id', user.id)
+    .single()
+
+  if (profileError) {
+    console.error('Profile query error:', profileError)
+
+    return res.status(500).json({
+      error: 'Could not load user profile'
+    })
+  }
+
   res.json({
     id: user.id,
-    email: user.email
+    email: user.email,
+    profile
   })
 })
 
