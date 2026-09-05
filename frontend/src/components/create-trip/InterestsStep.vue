@@ -267,343 +267,953 @@ function handleNext() {
 </script>
 
 <template>
-  <section>
-    <p>Step 2 of 6</p>
-
-    <h1>Tell us what you love</h1>
-
-    <p>
-      We'll use your preferences to personalize your itinerary.
-    </p>
-
-    <!-- FOOD -->
-    <div v-if="hasInterest('Food')">
-      <h2>Food</h2>
-
-      <h3>What cuisines do you enjoy?</h3>
-
-      <button
-        v-for="item in options.food.cuisines"
-        :key="item"
-        type="button"
-        @click="toggleArrayValue(formData.food.cuisines, item)"
-      >
-        {{ formData.food.cuisines.includes(item) ? '✓ ' : '' }}
-        {{ item }}
-      </button>
-
-      <h3>What kind of food places do you prefer?</h3>
-
-      <button
-        v-for="item in options.food.places"
-        :key="item"
-        type="button"
-        @click="toggleArrayValue(formData.food.places, item)"
-      >
-        {{ formData.food.places.includes(item) ? '✓ ' : '' }}
-        {{ item }}
-      </button>
-
-      <h3>How much do you usually want to spend on food?</h3>
-
-      <label
-        v-for="item in options.food.spending"
-        :key="item"
-      >
-        <input
-          v-model="formData.food.spending"
-          type="radio"
-          name="food-spending"
-          :value="item"
-        >
-
-        {{ item }}
-      </label>
-    </div>
-
-    <!-- NIGHTLIFE -->
-    <div v-if="hasInterest('Nightlife')">
-      <h2>Nightlife</h2>
-
-      <h3>What kind of nightlife do you enjoy?</h3>
-
-      <button
-        v-for="item in options.nightlife.types"
-        :key="item"
-        type="button"
-        @click="toggleArrayValue(formData.nightlife.types, item)"
-      >
-        {{ formData.nightlife.types.includes(item) ? '✓ ' : '' }}
-        {{ item }}
-      </button>
-
-      <div v-if="hasClubs">
-        <h3>What music do you prefer?</h3>
-
-        <button
-          v-for="item in options.nightlife.music"
-          :key="item"
-          type="button"
-          @click="toggleArrayValue(formData.nightlife.music, item)"
-        >
-          {{ formData.nightlife.music.includes(item) ? '✓ ' : '' }}
-          {{ item }}
-        </button>
-      </div>
-    </div>
-
-    <!-- CULTURE -->
-    <div v-if="hasInterest('Culture')">
-      <h2>Culture</h2>
-
-      <h3>What interests you?</h3>
-
-      <button
-        v-for="item in options.culture.types"
-        :key="item"
-        type="button"
-        @click="toggleArrayValue(formData.culture.types, item)"
-      >
-        {{ formData.culture.types.includes(item) ? '✓ ' : '' }}
-        {{ item }}
-      </button>
-
-      <h3>How much culture do you want in your itinerary?</h3>
-
-      <label
-        v-for="item in options.culture.amount"
-        :key="item"
-      >
-        <input
-          v-model="formData.culture.amount"
-          type="radio"
-          name="culture-amount"
-          :value="item"
-        >
-
-        {{ item }}
-      </label>
-    </div>
-
-    <!-- NATURE -->
-    <div v-if="hasInterest('Nature')">
-      <h2>Nature</h2>
-
-      <h3>What do you enjoy?</h3>
-
-      <button
-        v-for="item in options.nature.types"
-        :key="item"
-        type="button"
-        @click="toggleArrayValue(formData.nature.types, item)"
-      >
-        {{ formData.nature.types.includes(item) ? '✓ ' : '' }}
-        {{ item }}
-      </button>
-
-      <div v-if="hasHiking">
-        <h3>Preferred hiking difficulty</h3>
-
-        <label
-          v-for="item in options.nature.hikingDifficulty"
-          :key="item"
-        >
-          <input
-            v-model="formData.nature.hikingDifficulty"
-            type="radio"
-            name="hiking-difficulty"
-            :value="item"
-          >
-
-          {{ item }}
-        </label>
-      </div>
-    </div>
-
-    <!-- BEACHES -->
-    <div v-if="hasInterest('Beaches')">
-      <h2>Beaches</h2>
-
-      <h3>What kind of beaches do you prefer?</h3>
-
-      <button
-        v-for="item in options.beaches.types"
-        :key="item"
-        type="button"
-        @click="toggleArrayValue(formData.beaches.types, item)"
-      >
-        {{ formData.beaches.types.includes(item) ? '✓ ' : '' }}
-        {{ item }}
-      </button>
-
-      <h3>How much beach time do you want?</h3>
-
-      <label
-        v-for="item in options.beaches.time"
-        :key="item"
-      >
-        <input
-          v-model="formData.beaches.time"
-          type="radio"
-          name="beach-time"
-          :value="item"
-        >
-
-        {{ item }}
-      </label>
-    </div>
-
-    <!-- RELAXATION -->
-    <div v-if="hasInterest('Relaxation')">
-      <h2>Relaxation</h2>
-
-      <h3>What helps you relax?</h3>
-
-      <button
-        v-for="item in options.relaxation.types"
-        :key="item"
-        type="button"
-        @click="toggleArrayValue(formData.relaxation.types, item)"
-      >
-        {{ formData.relaxation.types.includes(item) ? '✓ ' : '' }}
-        {{ item }}
-      </button>
-
-      <h3>How much downtime do you want?</h3>
-
-      <label
-        v-for="item in options.relaxation.downtime"
-        :key="item"
-      >
-        <input
-          v-model="formData.relaxation.downtime"
-          type="radio"
-          name="relaxation-downtime"
-          :value="item"
-        >
-
-        {{ item }}
-      </label>
-    </div>
-
-    <!-- SHOPPING -->
-    <div v-if="hasInterest('Shopping')">
-      <h2>Shopping</h2>
-
-      <h3>What kind of shopping do you enjoy?</h3>
-
-      <button
-        v-for="item in options.shopping"
-        :key="item"
-        type="button"
-        @click="toggleArrayValue(formData.shopping.types, item)"
-      >
-        {{ formData.shopping.types.includes(item) ? '✓ ' : '' }}
-        {{ item }}
-      </button>
-    </div>
-
-    <!-- ADVENTURE -->
-    <div v-if="hasInterest('Adventure')">
-      <h2>Adventure</h2>
-
-      <h3>What sounds fun?</h3>
-
-      <button
-        v-for="item in options.adventure.types"
-        :key="item"
-        type="button"
-        @click="toggleArrayValue(formData.adventure.types, item)"
-      >
-        {{ formData.adventure.types.includes(item) ? '✓ ' : '' }}
-        {{ item }}
-      </button>
-
-      <h3>What's your adventure level?</h3>
-
-      <label
-        v-for="item in options.adventure.intensity"
-        :key="item"
-      >
-        <input
-          v-model="formData.adventure.intensity"
-          type="radio"
-          name="adventure-intensity"
-          :value="item"
-        >
-
-        {{ item }}
-      </label>
-    </div>
-
-    <!-- ENTERTAINMENT -->
-    <div v-if="hasInterest('Entertainment')">
-      <h2>Entertainment</h2>
-
-      <h3>What are you interested in?</h3>
-
-      <button
-        v-for="item in options.entertainment"
-        :key="item"
-        type="button"
-        @click="toggleArrayValue(formData.entertainment.types, item)"
-      >
-        {{ formData.entertainment.types.includes(item) ? '✓ ' : '' }}
-        {{ item }}
-      </button>
-    </div>
-
-    <!-- PHOTOGRAPHY -->
-    <div v-if="hasInterest('Photography')">
-      <h2>Photography</h2>
-
-      <h3>What do you like photographing?</h3>
-
-      <button
-        v-for="item in options.photography"
-        :key="item"
-        type="button"
-        @click="toggleArrayValue(formData.photography.types, item)"
-      >
-        {{ formData.photography.types.includes(item) ? '✓ ' : '' }}
-        {{ item }}
-      </button>
-    </div>
-
-    <!-- TOP PRIORITIES -->
-    <div v-if="selectedInterests.length > 3">
-      <h2>What matters most to you?</h2>
-
-      <p>
-        Choose up to 3 priorities for this trip.
+  <section class="interests-step">
+    <div class="step-intro">
+      <p class="step-kicker">
+        YOUR INTERESTS
       </p>
 
-      <button
-        v-for="interest in selectedInterests"
-        :key="interest"
-        type="button"
-        @click="togglePriority(interest)"
-      >
-        {{ formData.topPriorities.includes(interest) ? '★ ' : '' }}
-        {{ interest }}
-      </button>
+      <h2>
+        Tell us what you love
+      </h2>
+
+      <p>
+        Fine-tune the interests you selected so Voyagio can make your itinerary
+        feel much more like you.
+      </p>
     </div>
 
+    <!-- FOOD -->
+    <section
+      v-if="hasInterest('Food')"
+      class="interest-section"
+    >
+      <div class="interest-heading">
+        <div>
+          <p class="interest-label">
+            FOOD
+          </p>
+
+          <h3>
+            Let's talk about food
+          </h3>
+        </div>
+      </div>
+
+      <div class="preference-group">
+        <h4>
+          What cuisines do you enjoy?
+        </h4>
+
+        <div class="option-grid">
+          <button
+            v-for="item in options.food.cuisines"
+            :key="item"
+            type="button"
+            class="option-chip"
+            :class="{ selected: formData.food.cuisines.includes(item) }"
+            @click="toggleArrayValue(formData.food.cuisines, item)"
+          >
+            <span v-if="formData.food.cuisines.includes(item)">
+              ✓
+            </span>
+
+            {{ item }}
+          </button>
+        </div>
+      </div>
+
+      <div class="preference-group">
+        <h4>
+          What kind of food places do you prefer?
+        </h4>
+
+        <div class="option-grid">
+          <button
+            v-for="item in options.food.places"
+            :key="item"
+            type="button"
+            class="option-chip"
+            :class="{ selected: formData.food.places.includes(item) }"
+            @click="toggleArrayValue(formData.food.places, item)"
+          >
+            <span v-if="formData.food.places.includes(item)">
+              ✓
+            </span>
+
+            {{ item }}
+          </button>
+        </div>
+      </div>
+
+      <div class="preference-group">
+        <h4>
+          How much do you usually want to spend on food?
+        </h4>
+
+        <div class="radio-grid">
+          <label
+            v-for="item in options.food.spending"
+            :key="item"
+            class="radio-card"
+            :class="{ selected: formData.food.spending === item }"
+          >
+            <input
+              v-model="formData.food.spending"
+              type="radio"
+              name="food-spending"
+              :value="item"
+            >
+
+            <span>
+              {{ item }}
+            </span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- NIGHTLIFE -->
+    <section
+      v-if="hasInterest('Nightlife')"
+      class="interest-section"
+    >
+      <div class="interest-heading">
+        <div>
+          <p class="interest-label">
+            NIGHTLIFE
+          </p>
+
+          <h3>
+            What does a good night out look like?
+          </h3>
+        </div>
+      </div>
+
+      <div class="preference-group">
+        <h4>
+          What kind of nightlife do you enjoy?
+        </h4>
+
+        <div class="option-grid">
+          <button
+            v-for="item in options.nightlife.types"
+            :key="item"
+            type="button"
+            class="option-chip"
+            :class="{ selected: formData.nightlife.types.includes(item) }"
+            @click="toggleArrayValue(formData.nightlife.types, item)"
+          >
+            <span v-if="formData.nightlife.types.includes(item)">
+              ✓
+            </span>
+
+            {{ item }}
+          </button>
+        </div>
+      </div>
+
+      <div
+        v-if="hasClubs"
+        class="preference-group nested-group"
+      >
+        <h4>
+          What music do you prefer?
+        </h4>
+
+        <div class="option-grid">
+          <button
+            v-for="item in options.nightlife.music"
+            :key="item"
+            type="button"
+            class="option-chip"
+            :class="{ selected: formData.nightlife.music.includes(item) }"
+            @click="toggleArrayValue(formData.nightlife.music, item)"
+          >
+            <span v-if="formData.nightlife.music.includes(item)">
+              ✓
+            </span>
+
+            {{ item }}
+          </button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- CULTURE -->
+    <section
+      v-if="hasInterest('Culture')"
+      class="interest-section"
+    >
+      <div class="interest-heading">
+        <div>
+          <p class="interest-label">
+            CULTURE
+          </p>
+
+          <h3>
+            What draws you into a place?
+          </h3>
+        </div>
+      </div>
+
+      <div class="preference-group">
+        <h4>
+          What interests you?
+        </h4>
+
+        <div class="option-grid">
+          <button
+            v-for="item in options.culture.types"
+            :key="item"
+            type="button"
+            class="option-chip"
+            :class="{ selected: formData.culture.types.includes(item) }"
+            @click="toggleArrayValue(formData.culture.types, item)"
+          >
+            <span v-if="formData.culture.types.includes(item)">
+              ✓
+            </span>
+
+            {{ item }}
+          </button>
+        </div>
+      </div>
+
+      <div class="preference-group">
+        <h4>
+          How much culture do you want in your itinerary?
+        </h4>
+
+        <div class="radio-grid">
+          <label
+            v-for="item in options.culture.amount"
+            :key="item"
+            class="radio-card"
+            :class="{ selected: formData.culture.amount === item }"
+          >
+            <input
+              v-model="formData.culture.amount"
+              type="radio"
+              name="culture-amount"
+              :value="item"
+            >
+
+            <span>
+              {{ item }}
+            </span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- NATURE -->
+    <section
+      v-if="hasInterest('Nature')"
+      class="interest-section"
+    >
+      <div class="interest-heading">
+        <div>
+          <p class="interest-label">
+            NATURE
+          </p>
+
+          <h3>
+            What kind of nature do you want around you?
+          </h3>
+        </div>
+      </div>
+
+      <div class="preference-group">
+        <h4>
+          What do you enjoy?
+        </h4>
+
+        <div class="option-grid">
+          <button
+            v-for="item in options.nature.types"
+            :key="item"
+            type="button"
+            class="option-chip"
+            :class="{ selected: formData.nature.types.includes(item) }"
+            @click="toggleArrayValue(formData.nature.types, item)"
+          >
+            <span v-if="formData.nature.types.includes(item)">
+              ✓
+            </span>
+
+            {{ item }}
+          </button>
+        </div>
+      </div>
+
+      <div
+        v-if="hasHiking"
+        class="preference-group nested-group"
+      >
+        <h4>
+          Preferred hiking difficulty
+        </h4>
+
+        <div class="radio-grid">
+          <label
+            v-for="item in options.nature.hikingDifficulty"
+            :key="item"
+            class="radio-card"
+            :class="{ selected: formData.nature.hikingDifficulty === item }"
+          >
+            <input
+              v-model="formData.nature.hikingDifficulty"
+              type="radio"
+              name="hiking-difficulty"
+              :value="item"
+            >
+
+            <span>
+              {{ item }}
+            </span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- BEACHES -->
+    <section
+      v-if="hasInterest('Beaches')"
+      class="interest-section"
+    >
+      <div class="interest-heading">
+        <div>
+          <p class="interest-label">
+            BEACHES
+          </p>
+
+          <h3>
+            What's your ideal beach day?
+          </h3>
+        </div>
+      </div>
+
+      <div class="preference-group">
+        <h4>
+          What kind of beaches do you prefer?
+        </h4>
+
+        <div class="option-grid">
+          <button
+            v-for="item in options.beaches.types"
+            :key="item"
+            type="button"
+            class="option-chip"
+            :class="{ selected: formData.beaches.types.includes(item) }"
+            @click="toggleArrayValue(formData.beaches.types, item)"
+          >
+            <span v-if="formData.beaches.types.includes(item)">
+              ✓
+            </span>
+
+            {{ item }}
+          </button>
+        </div>
+      </div>
+
+      <div class="preference-group">
+        <h4>
+          How much beach time do you want?
+        </h4>
+
+        <div class="radio-grid">
+          <label
+            v-for="item in options.beaches.time"
+            :key="item"
+            class="radio-card"
+            :class="{ selected: formData.beaches.time === item }"
+          >
+            <input
+              v-model="formData.beaches.time"
+              type="radio"
+              name="beach-time"
+              :value="item"
+            >
+
+            <span>
+              {{ item }}
+            </span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- RELAXATION -->
+    <section
+      v-if="hasInterest('Relaxation')"
+      class="interest-section"
+    >
+      <div class="interest-heading">
+        <div>
+          <p class="interest-label">
+            RELAXATION
+          </p>
+
+          <h3>
+            How do you like to slow down?
+          </h3>
+        </div>
+      </div>
+
+      <div class="preference-group">
+        <h4>
+          What helps you relax?
+        </h4>
+
+        <div class="option-grid">
+          <button
+            v-for="item in options.relaxation.types"
+            :key="item"
+            type="button"
+            class="option-chip"
+            :class="{ selected: formData.relaxation.types.includes(item) }"
+            @click="toggleArrayValue(formData.relaxation.types, item)"
+          >
+            <span v-if="formData.relaxation.types.includes(item)">
+              ✓
+            </span>
+
+            {{ item }}
+          </button>
+        </div>
+      </div>
+
+      <div class="preference-group">
+        <h4>
+          How much downtime do you want?
+        </h4>
+
+        <div class="radio-grid">
+          <label
+            v-for="item in options.relaxation.downtime"
+            :key="item"
+            class="radio-card"
+            :class="{ selected: formData.relaxation.downtime === item }"
+          >
+            <input
+              v-model="formData.relaxation.downtime"
+              type="radio"
+              name="relaxation-downtime"
+              :value="item"
+            >
+
+            <span>
+              {{ item }}
+            </span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SHOPPING -->
+    <section
+      v-if="hasInterest('Shopping')"
+      class="interest-section"
+    >
+      <div class="interest-heading">
+        <div>
+          <p class="interest-label">
+            SHOPPING
+          </p>
+
+          <h3>
+            What kind of shopping do you enjoy?
+          </h3>
+        </div>
+      </div>
+
+      <div class="preference-group">
+        <div class="option-grid">
+          <button
+            v-for="item in options.shopping"
+            :key="item"
+            type="button"
+            class="option-chip"
+            :class="{ selected: formData.shopping.types.includes(item) }"
+            @click="toggleArrayValue(formData.shopping.types, item)"
+          >
+            <span v-if="formData.shopping.types.includes(item)">
+              ✓
+            </span>
+
+            {{ item }}
+          </button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ADVENTURE -->
+    <section
+      v-if="hasInterest('Adventure')"
+      class="interest-section"
+    >
+      <div class="interest-heading">
+        <div>
+          <p class="interest-label">
+            ADVENTURE
+          </p>
+
+          <h3>
+            How adventurous are we feeling?
+          </h3>
+        </div>
+      </div>
+
+      <div class="preference-group">
+        <h4>
+          What sounds fun?
+        </h4>
+
+        <div class="option-grid">
+          <button
+            v-for="item in options.adventure.types"
+            :key="item"
+            type="button"
+            class="option-chip"
+            :class="{ selected: formData.adventure.types.includes(item) }"
+            @click="toggleArrayValue(formData.adventure.types, item)"
+          >
+            <span v-if="formData.adventure.types.includes(item)">
+              ✓
+            </span>
+
+            {{ item }}
+          </button>
+        </div>
+      </div>
+
+      <div class="preference-group">
+        <h4>
+          What's your adventure level?
+        </h4>
+
+        <div class="radio-grid">
+          <label
+            v-for="item in options.adventure.intensity"
+            :key="item"
+            class="radio-card"
+            :class="{ selected: formData.adventure.intensity === item }"
+          >
+            <input
+              v-model="formData.adventure.intensity"
+              type="radio"
+              name="adventure-intensity"
+              :value="item"
+            >
+
+            <span>
+              {{ item }}
+            </span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ENTERTAINMENT -->
+    <section
+      v-if="hasInterest('Entertainment')"
+      class="interest-section"
+    >
+      <div class="interest-heading">
+        <div>
+          <p class="interest-label">
+            ENTERTAINMENT
+          </p>
+
+          <h3>
+            What sounds entertaining?
+          </h3>
+        </div>
+      </div>
+
+      <div class="preference-group">
+        <div class="option-grid">
+          <button
+            v-for="item in options.entertainment"
+            :key="item"
+            type="button"
+            class="option-chip"
+            :class="{ selected: formData.entertainment.types.includes(item) }"
+            @click="toggleArrayValue(formData.entertainment.types, item)"
+          >
+            <span v-if="formData.entertainment.types.includes(item)">
+              ✓
+            </span>
+
+            {{ item }}
+          </button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- PHOTOGRAPHY -->
+    <section
+      v-if="hasInterest('Photography')"
+      class="interest-section"
+    >
+      <div class="interest-heading">
+        <div>
+          <p class="interest-label">
+            PHOTOGRAPHY
+          </p>
+
+          <h3>
+            What do you love photographing?
+          </h3>
+        </div>
+      </div>
+
+      <div class="preference-group">
+        <div class="option-grid">
+          <button
+            v-for="item in options.photography"
+            :key="item"
+            type="button"
+            class="option-chip"
+            :class="{ selected: formData.photography.types.includes(item) }"
+            @click="toggleArrayValue(formData.photography.types, item)"
+          >
+            <span v-if="formData.photography.types.includes(item)">
+              ✓
+            </span>
+
+            {{ item }}
+          </button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- TOP PRIORITIES -->
+    <section
+      v-if="selectedInterests.length > 3"
+      class="priority-section"
+    >
+      <div class="priority-heading">
+        <p class="priority-kicker">
+          MOST IMPORTANT
+        </p>
+
+        <h3>
+          What matters most to you?
+        </h3>
+
+        <p>
+          Choose up to 3 priorities. Voyagio will give these more weight when
+          building your itinerary.
+        </p>
+      </div>
+
+      <div class="priority-grid">
+        <button
+          v-for="interest in selectedInterests"
+          :key="interest"
+          type="button"
+          class="priority-card"
+          :class="{ selected: formData.topPriorities.includes(interest) }"
+          @click="togglePriority(interest)"
+        >
+          <span class="priority-star">
+            {{ formData.topPriorities.includes(interest) ? '★' : '☆' }}
+          </span>
+
+          <span>
+            {{ interest }}
+          </span>
+        </button>
+      </div>
+
+      <p class="priority-count">
+        {{ formData.topPriorities.length }} / 3 selected
+      </p>
+    </section>
+
+
     <!-- NAVIGATION -->
-    <div>
+    <div class="step-actions">
       <button
         type="button"
+        class="back-button"
         @click="emit('back')"
       >
-        Back
+        ← Back
       </button>
 
       <button
         type="button"
+        class="next-button"
         @click="handleNext"
       >
-        Next
+        Next: Your stay
+        <span aria-hidden="true">
+          →
+        </span>
       </button>
     </div>
   </section>
 </template>
+
+<style scoped>
+.interests-step {
+  width: 100%;
+}
+
+
+/* =========================
+   INTEREST SECTIONS
+========================= */
+
+.interest-section {
+  padding: 38px 0;
+
+  border-top: 1px solid rgba(84, 107, 65, 0.12);
+}
+
+.interest-heading {
+  margin-bottom: 28px;
+}
+
+.interest-label {
+  margin: 0 0 8px;
+
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 0.16em;
+
+  color: var(--color-accent);
+}
+
+.interest-heading h3 {
+  margin: 0;
+
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 600;
+
+  color: var(--color-text);
+}
+
+
+/* =========================
+   PREFERENCE GROUPS
+========================= */
+
+.preference-group + .preference-group {
+  margin-top: 32px;
+}
+
+.preference-group h4 {
+  margin: 0 0 15px;
+
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+
+  color: #3e493b;
+}
+
+.nested-group {
+  padding: 24px;
+
+  border-radius: 12px;
+
+  background: rgba(153, 173, 122, 0.09);
+}
+
+
+/* =========================
+   RADIO GRID
+========================= */
+
+.radio-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  gap: 10px;
+}
+
+
+/* =========================
+   PRIORITIES
+========================= */
+
+.priority-section {
+  margin-top: 28px;
+
+  padding: 34px;
+
+  border-radius: var(--border-radius-large);
+
+  background: var(--color-sand);
+}
+
+.priority-kicker {
+  margin: 0 0 8px;
+
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 0.16em;
+
+  color: var(--color-primary);
+}
+
+.priority-heading h3 {
+  margin: 0;
+
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 600;
+
+  color: var(--color-text);
+}
+
+.priority-heading > p:last-child {
+  max-width: 650px;
+
+  margin: 10px 0 0;
+
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+
+  color: #576151;
+}
+
+.priority-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 10px;
+
+  margin-top: 24px;
+}
+
+.priority-card {
+  min-height: 58px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 0 16px;
+
+  border: 1px solid rgba(84, 107, 65, 0.22);
+  border-radius: var(--border-radius-small);
+
+  background: rgba(255, 248, 236, 0.66);
+
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+
+  color: #3e493b;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.priority-card:hover {
+  transform: translateY(-1px);
+
+  border-color: rgba(84, 107, 65, 0.5);
+}
+
+.priority-card.selected {
+  border-color: var(--color-primary);
+
+  background: var(--color-primary);
+  color: var(--color-background);
+}
+
+.priority-star {
+  font-size: 17px;
+}
+
+.priority-count {
+  margin: 14px 0 0;
+
+  text-align: right;
+
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+
+  color: #687261;
+}
+
+
+/* =========================
+   NAVIGATION SPACING
+========================= */
+
+.step-actions {
+  margin-top: 38px;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+  .radio-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .priority-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+  .interest-section {
+    padding: 30px 0;
+  }
+
+  .interest-heading h3 {
+    font-size: 24px;
+  }
+
+  .radio-grid,
+  .priority-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nested-group {
+    padding: 18px;
+  }
+
+  .priority-section {
+    padding: 24px 20px;
+  }
+}
+</style>

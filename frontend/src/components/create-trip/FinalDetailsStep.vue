@@ -27,282 +27,835 @@ function handleGenerate() {
 </script>
 
 <template>
-  <section>
-    <p>Step 6 of 6</p>
+  <section class="final-details-step">
 
-    <h1>Final touches</h1>
+    <!-- INTRO -->
+    <div class="step-intro">
+      <p class="step-kicker">
+        FINAL DETAILS
+      </p>
 
-    <p>
-      Add anything else that could help us personalize your trip.
-    </p>
+      <h2>
+        Final touches
+      </h2>
 
-    <!-- Things to avoid -->
-    <div>
-      <label for="things-to-avoid">
-        <h2>Anything we should avoid?</h2>
-      </label>
-
-      <textarea
-        id="things-to-avoid"
-        v-model="formData.thingsToAvoid"
-        rows="4"
-        placeholder="e.g. We don't like crowded clubs or seafood."
-      />
+      <p>
+        Add anything else that could help Voyagio personalize your trip,
+        then review everything before generating your itinerary.
+      </p>
     </div>
 
-    <!-- Things we should know -->
-    <div>
-      <label for="things-to-know">
-        <h2>Anything we should know?</h2>
-      </label>
 
-      <textarea
-        id="things-to-know"
-        v-model="formData.thingsToKnow"
-        rows="4"
-        placeholder="e.g. It's our anniversary and we'd like one romantic evening."
-      />
-    </div>
+    <!-- EXTRA DETAILS -->
+    <section class="form-section">
+      <div class="section-heading">
+        <div class="section-number">
+          01
+        </div>
 
-    <!-- Special requests -->
-    <div>
-      <label for="special-requests">
-        <h2>Any special requests?</h2>
-      </label>
+        <div>
+          <h3>
+            Anything we should avoid?
+          </h3>
 
-      <textarea
-        id="special-requests"
-        v-model="formData.specialRequests"
-        rows="4"
-        placeholder="e.g. I'd love to see a football match if there is one during our trip."
-      />
-    </div>
+          <p>
+            Tell us about activities, places or experiences you'd rather skip.
+          </p>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <textarea
+          id="things-to-avoid"
+          v-model="formData.thingsToAvoid"
+          rows="4"
+          placeholder="e.g. We don't like crowded clubs or seafood."
+        />
+      </div>
+    </section>
+
+
+    <section class="form-section">
+      <div class="section-heading">
+        <div class="section-number">
+          02
+        </div>
+
+        <div>
+          <h3>
+            Anything we should know?
+          </h3>
+
+          <p>
+            Add any context that could help us make the trip feel more personal.
+          </p>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <textarea
+          id="things-to-know"
+          v-model="formData.thingsToKnow"
+          rows="4"
+          placeholder="e.g. It's our anniversary and we'd like one romantic evening."
+        />
+      </div>
+    </section>
+
+
+    <section class="form-section">
+      <div class="section-heading">
+        <div class="section-number">
+          03
+        </div>
+
+        <div>
+          <h3>
+            Any special requests?
+          </h3>
+
+          <p>
+            Add anything specific you'd love to include if possible.
+          </p>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <textarea
+          id="special-requests"
+          v-model="formData.specialRequests"
+          rows="4"
+          placeholder="e.g. I'd love to see a football match if there is one during our trip."
+        />
+      </div>
+    </section>
+
 
     <!-- REVIEW -->
-    <div>
-      <h1>Review your trip</h1>
-
-      <!-- Basics -->
-      <div>
-        <h2>Trip</h2>
-
-        <p>
-          <strong>Destination:</strong>
-          {{ tripForm.basics.destination.city }},
-          {{ tripForm.basics.destination.country }}
+    <section class="review-section">
+      <div class="review-intro">
+        <p class="review-kicker">
+          YOUR TRIP AT A GLANCE
         </p>
 
-        <p>
-          <strong>Dates:</strong>
-          {{ tripForm.basics.startDate }}
-          →
-          {{ tripForm.basics.endDate }}
-        </p>
+        <h3>
+          Review your trip
+        </h3>
 
         <p>
-          <strong>Travelers:</strong>
-          {{ tripForm.basics.numberOfTravelers }}
-        </p>
-
-        <p>
-          <strong>Traveling with:</strong>
-          {{ tripForm.basics.travelingWith }}
-        </p>
-
-        <p v-if="tripForm.basics.childrenAges">
-          <strong>Children ages:</strong>
-          {{ tripForm.basics.childrenAges }}
-        </p>
-
-        <p>
-          <strong>Pace:</strong>
-          {{ tripForm.basics.pace }}
+          Check that everything looks right before generating your itinerary.
         </p>
       </div>
 
-      <!-- Interests -->
-      <div>
-        <h2>Interests</h2>
 
-        <p>
-          <strong>Selected interests:</strong>
-          {{ listOrFallback(tripForm.basics.interests) }}
-        </p>
+      <div class="review-grid">
 
-        <p>
-          <strong>Top priorities:</strong>
-          {{ listOrFallback(tripForm.interestPreferences.topPriorities) }}
-        </p>
+        <!-- TRIP -->
+        <article class="review-card">
+          <p class="review-card-label">
+            TRIP
+          </p>
+
+          <h4>
+            Trip basics
+          </h4>
+
+          <div class="review-list">
+            <div class="review-row">
+              <span class="review-key">
+                Destination
+              </span>
+
+              <span class="review-value">
+                {{ tripForm.basics.destination.city }},
+                {{ tripForm.basics.destination.country }}
+              </span>
+            </div>
+
+            <div class="review-row">
+              <span class="review-key">
+                Dates
+              </span>
+
+              <span class="review-value">
+                {{ tripForm.basics.startDate }}
+                →
+                {{ tripForm.basics.endDate }}
+              </span>
+            </div>
+
+            <div class="review-row">
+              <span class="review-key">
+                Travelers
+              </span>
+
+              <span class="review-value">
+                {{ tripForm.basics.numberOfTravelers }}
+              </span>
+            </div>
+
+            <div class="review-row">
+              <span class="review-key">
+                Traveling with
+              </span>
+
+              <span class="review-value">
+                {{ tripForm.basics.travelingWith }}
+              </span>
+            </div>
+
+            <div
+              v-if="tripForm.basics.childrenAges"
+              class="review-row"
+            >
+              <span class="review-key">
+                Children ages
+              </span>
+
+              <span class="review-value">
+                {{ tripForm.basics.childrenAges }}
+              </span>
+            </div>
+
+            <div class="review-row">
+              <span class="review-key">
+                Pace
+              </span>
+
+              <span class="review-value">
+                {{ tripForm.basics.pace }}
+              </span>
+            </div>
+          </div>
+        </article>
+
+
+        <!-- INTERESTS -->
+        <article class="review-card">
+          <p class="review-card-label">
+            INTERESTS
+          </p>
+
+          <h4>
+            What matters to you
+          </h4>
+
+          <div class="review-list">
+            <div class="review-row stacked">
+              <span class="review-key">
+                Selected interests
+              </span>
+
+              <span class="review-value">
+                {{ listOrFallback(tripForm.basics.interests) }}
+              </span>
+            </div>
+
+            <div class="review-row stacked">
+              <span class="review-key">
+                Top priorities
+              </span>
+
+              <span class="review-value">
+                {{ listOrFallback(tripForm.interestPreferences.topPriorities) }}
+              </span>
+            </div>
+          </div>
+        </article>
+
+
+        <!-- STAY -->
+        <article class="review-card">
+          <p class="review-card-label">
+            STAY
+          </p>
+
+          <h4>
+            Accommodation
+          </h4>
+
+          <p
+            v-if="tripForm.accommodation.skipRecommendations"
+            class="review-note"
+          >
+            No accommodation recommendations needed.
+          </p>
+
+          <div
+            v-else
+            class="review-list"
+          >
+            <div class="review-row">
+              <span class="review-key">
+                Budget
+              </span>
+
+              <span class="review-value">
+                <template v-if="tripForm.accommodation.budget.amount">
+                  {{ tripForm.accommodation.budget.amount }}
+                  {{ tripForm.accommodation.budget.currency }}
+                  ·
+                  {{ tripForm.accommodation.budget.type }}
+                </template>
+
+                <template v-else>
+                  No specific budget
+                </template>
+              </span>
+            </div>
+
+            <div class="review-row">
+              <span class="review-key">
+                Level
+              </span>
+
+              <span class="review-value">
+                {{ tripForm.accommodation.level }}
+              </span>
+            </div>
+
+            <div class="review-row stacked">
+              <span class="review-key">
+                Type
+              </span>
+
+              <span class="review-value">
+                {{ listOrFallback(tripForm.accommodation.types) }}
+              </span>
+            </div>
+
+            <div class="review-row">
+              <span class="review-key">
+                Room
+              </span>
+
+              <span class="review-value">
+                {{ tripForm.accommodation.roomPreference }}
+              </span>
+            </div>
+
+            <div class="review-row stacked">
+              <span class="review-key">
+                Preferences
+              </span>
+
+              <span class="review-value">
+                {{ listOrFallback(tripForm.accommodation.amenities) }}
+              </span>
+            </div>
+
+            <div class="review-row">
+              <span class="review-key">
+                Area
+              </span>
+
+              <span class="review-value">
+                {{ tripForm.accommodation.areaPreference }}
+              </span>
+            </div>
+          </div>
+        </article>
+
+
+        <!-- FLIGHTS -->
+        <article class="review-card">
+          <p class="review-card-label">
+            FLIGHTS
+          </p>
+
+          <h4>
+            Flight preferences
+          </h4>
+
+          <p
+            v-if="tripForm.flights.alreadyHaveFlights"
+            class="review-note"
+          >
+            Flights already booked.
+          </p>
+
+          <div
+            v-else
+            class="review-list"
+          >
+            <div class="review-row">
+              <span class="review-key">
+                Departure
+              </span>
+
+              <span class="review-value">
+                {{ tripForm.flights.departureLocation }}
+              </span>
+            </div>
+
+            <div class="review-row">
+              <span class="review-key">
+                Trip type
+              </span>
+
+              <span class="review-value">
+                {{ tripForm.flights.tripType }}
+              </span>
+            </div>
+
+            <div class="review-row">
+              <span class="review-key">
+                Budget
+              </span>
+
+              <span class="review-value">
+                <template v-if="tripForm.flights.budget.amount">
+                  {{ tripForm.flights.budget.amount }}
+                  {{ tripForm.flights.budget.currency }}
+                  ·
+                  {{ tripForm.flights.budget.type }}
+                </template>
+
+                <template v-else>
+                  No specific budget
+                </template>
+              </span>
+            </div>
+
+            <div class="review-row">
+              <span class="review-key">
+                Cabin
+              </span>
+
+              <span class="review-value">
+                {{ tripForm.flights.cabinClass }}
+              </span>
+            </div>
+
+            <div class="review-row">
+              <span class="review-key">
+                Connections
+              </span>
+
+              <span class="review-value">
+                {{ tripForm.flights.stops }}
+              </span>
+            </div>
+
+            <div class="review-row">
+              <span class="review-key">
+                Preferred departure
+              </span>
+
+              <span class="review-value">
+                {{ tripForm.flights.preferredDepartureTime }}
+              </span>
+            </div>
+
+            <div class="review-row">
+              <span class="review-key">
+                Luggage
+              </span>
+
+              <span class="review-value">
+                {{ tripForm.flights.luggage }}
+              </span>
+            </div>
+
+            <div class="review-row stacked">
+              <span class="review-key">
+                Airline preference
+              </span>
+
+              <span class="review-value">
+                {{ tripForm.flights.airlinePreference }}
+              </span>
+            </div>
+          </div>
+        </article>
+
+
+        <!-- BUDGET & STYLE -->
+        <article class="review-card">
+          <p class="review-card-label">
+            BUDGET & STYLE
+          </p>
+
+          <h4>
+            Daily spending
+          </h4>
+
+          <div class="review-list">
+            <div class="review-row">
+              <span class="review-key">
+                Spending budget
+              </span>
+
+              <span class="review-value">
+                <template v-if="tripForm.budgetAndStyle.spendingBudget.amount">
+                  {{ tripForm.budgetAndStyle.spendingBudget.amount }}
+                  {{ tripForm.budgetAndStyle.spendingBudget.currency }}
+                  ·
+                  {{ tripForm.budgetAndStyle.spendingBudget.type }}
+                </template>
+
+                <template v-else>
+                  No specific budget
+                </template>
+              </span>
+            </div>
+
+            <div class="review-row stacked">
+              <span class="review-key">
+                Travel style
+              </span>
+
+              <span class="review-value">
+                {{ tripForm.budgetAndStyle.experienceStyle }}
+              </span>
+            </div>
+
+            <div class="review-row">
+              <span class="review-key">
+                Daily schedule
+              </span>
+
+              <span class="review-value">
+                {{ tripForm.budgetAndStyle.dayStartPreference }}
+              </span>
+            </div>
+          </div>
+        </article>
+
+
+        <!-- EXTRA DETAILS -->
+        <article class="review-card">
+          <p class="review-card-label">
+            EXTRA DETAILS
+          </p>
+
+          <h4>
+            Final notes
+          </h4>
+
+          <div class="review-list">
+            <div class="review-row stacked">
+              <span class="review-key">
+                Avoid
+              </span>
+
+              <span class="review-value">
+                {{ formData.thingsToAvoid || 'Nothing specified' }}
+              </span>
+            </div>
+
+            <div class="review-row stacked">
+              <span class="review-key">
+                Important details
+              </span>
+
+              <span class="review-value">
+                {{ formData.thingsToKnow || 'Nothing specified' }}
+              </span>
+            </div>
+
+            <div class="review-row stacked">
+              <span class="review-key">
+                Special requests
+              </span>
+
+              <span class="review-value">
+                {{ formData.specialRequests || 'Nothing specified' }}
+              </span>
+            </div>
+          </div>
+        </article>
+
       </div>
+    </section>
 
-      <!-- Accommodation -->
-      <div>
-        <h2>Stay</h2>
 
-        <p v-if="tripForm.accommodation.skipRecommendations">
-          No accommodation recommendations needed.
-        </p>
-
-        <template v-else>
-          <p>
-            <strong>Budget:</strong>
-
-            <span v-if="tripForm.accommodation.budget.amount">
-              {{ tripForm.accommodation.budget.amount }}
-              {{ tripForm.accommodation.budget.currency }}
-              —
-              {{ tripForm.accommodation.budget.type }}
-            </span>
-
-            <span v-else>
-              No specific budget
-            </span>
-          </p>
-
-          <p>
-            <strong>Level:</strong>
-            {{ tripForm.accommodation.level }}
-          </p>
-
-          <p>
-            <strong>Type:</strong>
-            {{ listOrFallback(tripForm.accommodation.types) }}
-          </p>
-
-          <p>
-            <strong>Preferences:</strong>
-            {{ listOrFallback(tripForm.accommodation.amenities) }}
-          </p>
-
-          <p>
-            <strong>Area:</strong>
-            {{ tripForm.accommodation.areaPreference }}
-          </p>
-        </template>
-      </div>
-
-      <!-- Flights -->
-      <div>
-        <h2>Flights</h2>
-
-        <p v-if="tripForm.flights.alreadyHaveFlights">
-          Flights already booked.
-        </p>
-
-        <template v-else>
-          <p>
-            <strong>Departure:</strong>
-            {{ tripForm.flights.departureLocation }}
-          </p>
-
-          <p>
-            <strong>Budget:</strong>
-
-            <span v-if="tripForm.flights.budget.amount">
-              {{ tripForm.flights.budget.amount }}
-              {{ tripForm.flights.budget.currency }}
-              —
-              {{ tripForm.flights.budget.type }}
-            </span>
-
-            <span v-else>
-              No specific budget
-            </span>
-          </p>
-
-          <p>
-            <strong>Cabin:</strong>
-            {{ tripForm.flights.cabinClass }}
-          </p>
-
-          <p>
-            <strong>Connections:</strong>
-            {{ tripForm.flights.stops }}
-          </p>
-
-          <p>
-            <strong>Preferred departure:</strong>
-            {{ tripForm.flights.preferredDepartureTime }}
-          </p>
-
-          <p>
-            <strong>Luggage:</strong>
-            {{ tripForm.flights.luggage }}
-          </p>
-
-          <p>
-            <strong>Airline preference:</strong>
-            {{ tripForm.flights.airlinePreference }}
-          </p>
-        </template>
-      </div>
-
-      <!-- Spending -->
-      <div>
-        <h2>Budget & style</h2>
-
-        <p>
-          <strong>Spending budget:</strong>
-
-          <span v-if="tripForm.budgetAndStyle.spendingBudget.amount">
-            {{ tripForm.budgetAndStyle.spendingBudget.amount }}
-            {{ tripForm.budgetAndStyle.spendingBudget.currency }}
-            —
-            {{ tripForm.budgetAndStyle.spendingBudget.type }}
-          </span>
-
-          <span v-else>
-            No specific budget
-          </span>
-        </p>
-
-        <p>
-          <strong>Travel style:</strong>
-          {{ tripForm.budgetAndStyle.experienceStyle }}
-        </p>
-
-        <p>
-          <strong>Daily schedule:</strong>
-          {{ tripForm.budgetAndStyle.dayStartPreference }}
-        </p>
-      </div>
-
-      <!-- Final details -->
-      <div>
-        <h2>Extra details</h2>
-
-        <p>
-          <strong>Avoid:</strong>
-          {{ formData.thingsToAvoid || 'Nothing specified' }}
-        </p>
-
-        <p>
-          <strong>Important details:</strong>
-          {{ formData.thingsToKnow || 'Nothing specified' }}
-        </p>
-
-        <p>
-          <strong>Special requests:</strong>
-          {{ formData.specialRequests || 'Nothing specified' }}
-        </p>
-      </div>
-    </div>
-
-    <!-- Navigation -->
-    <div>
+    <!-- NAVIGATION -->
+    <div class="step-actions">
       <button
         type="button"
+        class="back-button"
         @click="emit('back')"
       >
-        Back
+        ← Back
       </button>
 
       <button
         type="button"
+        class="generate-button"
         @click="handleGenerate"
       >
         Generate My Itinerary
+
+        <span aria-hidden="true">
+          →
+        </span>
       </button>
     </div>
+
   </section>
 </template>
+
+<style scoped>
+.final-details-step {
+  width: 100%;
+}
+
+
+/* =========================
+   FORM SECTIONS
+========================= */
+
+.form-section {
+  padding: 36px 0;
+
+  border-top: 1px solid rgba(84, 107, 65, 0.12);
+}
+
+
+/* =========================
+   REVIEW
+========================= */
+
+.review-section {
+  margin-top: 22px;
+  padding-top: 42px;
+
+  border-top: 1px solid rgba(84, 107, 65, 0.12);
+}
+
+.review-intro {
+  max-width: 700px;
+
+  margin-bottom: 26px;
+}
+
+.review-kicker {
+  margin: 0 0 8px;
+
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 0.16em;
+
+  color: var(--color-accent);
+}
+
+.review-intro h3 {
+  margin: 0;
+
+  font-family: var(--font-heading);
+  font-size: 32px;
+  font-weight: 600;
+
+  color: var(--color-text);
+}
+
+.review-intro > p:last-child {
+  margin: 10px 0 0;
+
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+
+  color: #747d70;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 14px;
+}
+
+.review-card {
+  padding: 24px;
+
+  border: 1px solid rgba(84, 107, 65, 0.14);
+  border-radius: var(--border-radius-medium);
+
+  background: #fffdf8;
+}
+
+.review-card-label {
+  margin: 0 0 7px;
+
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 700;
+
+  letter-spacing: 0.15em;
+
+  color: var(--color-accent);
+}
+
+.review-card h4 {
+  margin: 0 0 20px;
+
+  font-family: var(--font-heading);
+  font-size: 21px;
+  font-weight: 600;
+
+  color: var(--color-text);
+}
+
+.review-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.review-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 11px 0;
+
+  border-top: 1px solid rgba(84, 107, 65, 0.08);
+}
+
+.review-row:first-child {
+  padding-top: 0;
+
+  border-top: 0;
+}
+
+.review-row.stacked {
+  flex-direction: column;
+
+  gap: 5px;
+}
+
+.review-key {
+  flex-shrink: 0;
+
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+
+  color: #727b6e;
+}
+
+.review-value {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.5;
+
+  text-align: right;
+
+  color: var(--color-text);
+}
+
+.review-row.stacked .review-value {
+  text-align: left;
+}
+
+.review-note {
+  margin: 0;
+
+  padding: 14px;
+
+  border-radius: var(--border-radius-small);
+
+  background: rgba(153, 173, 122, 0.12);
+
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.5;
+
+  color: #596453;
+}
+
+
+/* =========================
+   GENERATE BUTTON
+========================= */
+
+.generate-button {
+  min-height: 52px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+
+  padding: 0 24px;
+
+  border: 1px solid var(--color-primary);
+  border-radius: var(--border-radius-small);
+
+  background: var(--color-primary);
+
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+
+  color: var(--color-background);
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.generate-button:hover {
+  background: #455936;
+  border-color: #455936;
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 850px) {
+  .review-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+  .form-section {
+    padding: 30px 0;
+  }
+
+  .review-section {
+    padding-top: 34px;
+  }
+
+  .review-intro h3 {
+    font-size: 27px;
+  }
+
+  .review-card {
+    padding: 20px 18px;
+  }
+
+  .review-row {
+    flex-direction: column;
+
+    gap: 5px;
+  }
+
+  .review-value {
+    text-align: left;
+  }
+
+  .generate-button {
+    width: 100%;
+  }
+}
+</style>

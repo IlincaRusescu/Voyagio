@@ -170,192 +170,599 @@ async function handleNext() {
 </script>
 
 <template>
-  <section>
-    <p>Step 1 of 6</p>
+  <section class="trip-basics-step">
+    <div class="step-intro">
+      <p class="step-kicker">
+        TRIP BASICS
+      </p>
 
-    <h1>Tell us about your trip</h1>
+      <h2>
+        Tell us about your trip
+      </h2>
 
-    <p>
-      Let's start with the basics.
-    </p>
+      <p>
+        Start with the essentials. You can refine the details in the next steps.
+      </p>
+    </div>
 
-    <!-- Destination -->
-    <div>
-      <h2>Where do you want to go?</h2>
+    <!-- DESTINATION -->
+    <section class="form-section">
+      <div class="section-heading">
+        <div class="section-number">
+          01
+        </div>
 
-      <div>
-        <label for="destination-city">
-          City
-        </label>
+        <div>
+          <h3>
+            Where do you want to go?
+          </h3>
 
-        <input
-          id="destination-city"
-          v-model="formData.destination.city"
-          type="text"
-          placeholder="e.g. Barcelona"
-        >
+          <p>
+            Choose the city and country for this trip.
+          </p>
+        </div>
       </div>
 
-      <div>
-        <label for="destination-country">
-          Country
-        </label>
+      <div class="two-column-grid">
+        <div class="field-group">
+          <label for="destination-city">
+            City
+          </label>
 
-        <select
-          id="destination-country"
-          v-model="formData.destination.country"
-          @change="handleCountryChange"
-        >
-          <option value="">
-            Select a country
-          </option>
-
-          <option
-            v-for="country in countries"
-            :key="country.code"
-            :value="country.name"
+          <input
+            id="destination-city"
+            v-model="formData.destination.city"
+            type="text"
+            placeholder="e.g. Barcelona"
           >
-            {{ country.name }}
-          </option>
-        </select>
+        </div>
+
+        <div class="field-group">
+          <label for="destination-country">
+            Country
+          </label>
+
+          <select
+            id="destination-country"
+            v-model="formData.destination.country"
+            @change="handleCountryChange"
+          >
+            <option value="">
+              Select a country
+            </option>
+
+            <option
+              v-for="country in countries"
+              :key="country.code"
+              :value="country.name"
+            >
+              {{ country.name }}
+            </option>
+          </select>
+        </div>
       </div>
 
-      <p v-if="destinationError">
+      <p
+        v-if="destinationError"
+        class="field-error"
+      >
         {{ destinationError }}
       </p>
-    </div>
+    </section>
 
-    <!-- Dates -->
-    <div>
-      <h2>When are you going?</h2>
+    <!-- DATES -->
+    <section class="form-section">
+      <div class="section-heading">
+        <div class="section-number">
+          02
+        </div>
 
-      <div>
-        <label for="start-date">
-          Start date
-        </label>
+        <div>
+          <h3>
+            When are you going?
+          </h3>
 
-        <input
-          id="start-date"
-          v-model="formData.startDate"
-          type="date"
-        >
+          <p>
+            Select the start and end dates for your trip.
+          </p>
+        </div>
       </div>
 
-      <div>
-        <label for="end-date">
-          End date
-        </label>
+      <div class="two-column-grid">
+        <div class="field-group">
+          <label for="start-date">
+            Start date
+          </label>
 
-        <input
-          id="end-date"
-          v-model="formData.endDate"
-          type="date"
-        >
+          <input
+            id="start-date"
+            v-model="formData.startDate"
+            type="date"
+          >
+        </div>
+
+        <div class="field-group">
+          <label for="end-date">
+            End date
+          </label>
+
+          <input
+            id="end-date"
+            v-model="formData.endDate"
+            type="date"
+          >
+        </div>
       </div>
-    </div>
+    </section>
 
-    <!-- Traveling with -->
-    <div>
-      <h2>Who are you traveling with?</h2>
+    <!-- TRAVELING WITH -->
+    <section class="form-section">
+      <div class="section-heading">
+        <div class="section-number">
+          03
+        </div>
 
-      <label
-        v-for="option in travelCompanions"
-        :key="option"
-      >
-        <input
-          v-model="formData.travelingWith"
-          type="radio"
-          name="traveling-with"
-          :value="option"
+        <div>
+          <h3>
+            Who are you traveling with?
+          </h3>
+
+          <p>
+            This helps Voyagio adjust recommendations and pace.
+          </p>
+        </div>
+      </div>
+
+      <div class="choice-grid companion-grid">
+        <label
+          v-for="option in travelCompanions"
+          :key="option"
+          class="choice-card"
+          :class="{ selected: formData.travelingWith === option }"
         >
+          <input
+            v-model="formData.travelingWith"
+            type="radio"
+            name="traveling-with"
+            :value="option"
+          >
 
-        {{ option }}
-      </label>
-    </div>
+          <span>
+            {{ option }}
+          </span>
+        </label>
+      </div>
 
-    <!-- Number of travelers -->
-    <div>
-      <label for="number-of-travelers">
-        Number of travelers
-      </label>
+      <div class="traveler-details">
+        <div class="field-group small-field">
+          <label for="number-of-travelers">
+            Number of travelers
+          </label>
 
-      <input
-        id="number-of-travelers"
-        v-model.number="formData.numberOfTravelers"
-        type="number"
-        min="1"
-      >
-    </div>
+          <input
+            id="number-of-travelers"
+            v-model.number="formData.numberOfTravelers"
+            type="number"
+            min="1"
+          >
+        </div>
 
-    <!-- Children -->
-    <div v-if="formData.travelingWith === 'With children'">
-      <label for="children-ages">
-        Ages of children
-      </label>
-
-      <input
-        id="children-ages"
-        v-model="formData.childrenAges"
-        type="text"
-        placeholder="e.g. 4, 8"
-      >
-
-      <p>
-        Separate multiple ages with commas.
-      </p>
-    </div>
-
-    <!-- Travel pace -->
-    <div>
-      <h2>What's your travel pace?</h2>
-
-      <label
-        v-for="pace in travelPaces"
-        :key="pace"
-      >
-        <input
-          v-model="formData.pace"
-          type="radio"
-          name="travel-pace"
-          :value="pace"
+        <div
+          v-if="formData.travelingWith === 'With children'"
+          class="field-group"
         >
+          <label for="children-ages">
+            Ages of children
+          </label>
 
-        {{ pace }}
-      </label>
-    </div>
+          <input
+            id="children-ages"
+            v-model="formData.childrenAges"
+            type="text"
+            placeholder="e.g. 4, 8"
+          >
 
-    <!-- Interests -->
-    <div>
-      <h2>What are you interested in?</h2>
+          <p class="field-hint">
+            Separate multiple ages with commas.
+          </p>
+        </div>
+      </div>
+    </section>
 
-      <p>
-        Select everything you'd like us to consider.
+    <!-- PACE -->
+    <section class="form-section">
+      <div class="section-heading">
+        <div class="section-number">
+          04
+        </div>
+
+        <div>
+          <h3>
+            What's your travel pace?
+          </h3>
+
+          <p>
+            Pace controls how full your days feel, not how far you are allowed to travel.
+          </p>
+        </div>
+      </div>
+
+      <div class="pace-grid">
+        <label
+          v-for="pace in travelPaces"
+          :key="pace"
+          class="pace-card"
+          :class="{ selected: formData.pace === pace }"
+        >
+          <input
+            v-model="formData.pace"
+            type="radio"
+            name="travel-pace"
+            :value="pace"
+          >
+
+          <span class="pace-name">
+            {{ pace }}
+          </span>
+
+          <span
+            v-if="pace === 'Relaxed'"
+            class="pace-description"
+          >
+            Fewer activities, more breathing room.
+          </span>
+
+          <span
+            v-else-if="pace === 'Balanced'"
+            class="pace-description"
+          >
+            A comfortable mix of exploring and downtime.
+          </span>
+
+          <span
+            v-else
+            class="pace-description"
+          >
+            Full, active days with plenty to experience.
+          </span>
+        </label>
+      </div>
+    </section>
+
+    <!-- INTERESTS -->
+    <section class="form-section">
+      <div class="section-heading">
+        <div class="section-number">
+          05
+        </div>
+
+        <div>
+          <h3>
+            What are you interested in?
+          </h3>
+
+          <p>
+            Select everything you'd like Voyagio to consider.
+          </p>
+        </div>
+      </div>
+
+      <div class="interest-grid">
+        <button
+          v-for="interest in interests"
+          :key="interest"
+          type="button"
+          class="option-chip"
+          :class="{ selected: formData.interests.includes(interest) }"
+          @click="toggleInterest(interest)"
+        >
+          <span
+            v-if="formData.interests.includes(interest)"
+            class="checkmark"
+          >
+            ✓
+          </span>
+
+          {{ interest }}
+        </button>
+      </div>
+    </section>
+
+    <!-- NEXT -->
+    <div class="step-actions">
+      <p class="selection-summary">
+        {{ formData.interests.length }}
+        {{ formData.interests.length === 1 ? 'interest' : 'interests' }}
+        selected
       </p>
 
       <button
-        v-for="interest in interests"
-        :key="interest"
         type="button"
-        @click="toggleInterest(interest)"
-      >
-        {{ formData.interests.includes(interest) ? '✓ ' : '' }}
-        {{ interest }}
-      </button>
-    </div>
-
-    <!-- Next -->
-    <div>
-      <button
-        type="button"
+        class="next-button"
         :disabled="isValidatingDestination"
         @click="handleNext"
       >
         {{
           isValidatingDestination
             ? 'Validating destination...'
-            : 'Next'
+            : 'Next: Your interests'
         }}
+
+        <span
+          v-if="!isValidatingDestination"
+          aria-hidden="true"
+        >
+          →
+        </span>
       </button>
     </div>
   </section>
 </template>
+
+<style scoped>
+.trip-basics-step {
+  width: 100%;
+}
+
+
+/* =========================
+   FORM SECTIONS
+========================= */
+
+.form-section {
+  padding: 34px 0;
+
+  border-top: 1px solid rgba(84, 107, 65, 0.12);
+}
+
+.form-section:first-of-type {
+  padding-top: 0;
+
+  border-top: 0;
+}
+
+
+/* =========================
+   DESTINATION + DATES
+========================= */
+
+.two-column-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 18px;
+}
+
+
+/* =========================
+   TRAVEL COMPANIONS
+========================= */
+
+.choice-grid {
+  display: grid;
+
+  gap: 12px;
+}
+
+.companion-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.choice-card {
+  min-height: 54px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 16px;
+
+  border: 1px solid rgba(84, 107, 65, 0.18);
+  border-radius: var(--border-radius-small);
+
+  background: #fffdf8;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.choice-card:hover {
+  border-color: rgba(84, 107, 65, 0.4);
+
+  transform: translateY(-1px);
+}
+
+.choice-card.selected {
+  border-color: var(--color-primary);
+
+  background: rgba(153, 173, 122, 0.16);
+}
+
+.choice-card input {
+  position: absolute;
+
+  opacity: 0;
+
+  pointer-events: none;
+}
+
+.choice-card span {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+
+  color: #3e493b;
+}
+
+.traveler-details {
+  display: grid;
+  grid-template-columns:
+    minmax(180px, 0.35fr)
+    minmax(0, 1fr);
+
+  gap: 18px;
+
+  margin-top: 18px;
+}
+
+.small-field {
+  max-width: 220px;
+}
+
+
+/* =========================
+   PACE
+========================= */
+
+.pace-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 14px;
+}
+
+.pace-card {
+  min-height: 150px;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 22px;
+
+  border: 1px solid rgba(84, 107, 65, 0.18);
+  border-radius: 12px;
+
+  background: #fffdf8;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.pace-card:hover {
+  border-color: rgba(84, 107, 65, 0.4);
+
+  transform: translateY(-2px);
+}
+
+.pace-card.selected {
+  border-color: var(--color-primary);
+
+  background: rgba(153, 173, 122, 0.17);
+}
+
+.pace-card input {
+  position: absolute;
+
+  opacity: 0;
+
+  pointer-events: none;
+}
+
+.pace-name {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 600;
+
+  color: var(--color-text);
+}
+
+.pace-description {
+  margin-top: 10px;
+
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.55;
+
+  color: #747d70;
+}
+
+
+/* =========================
+   INTERESTS
+========================= */
+
+.interest-grid {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 10px;
+}
+
+.checkmark {
+  font-size: 13px;
+}
+
+
+/* =========================
+   ACTION AREA
+========================= */
+
+.selection-summary {
+  margin: 0;
+
+  font-family: var(--font-body);
+  font-size: 13px;
+
+  color: #80887c;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 850px) {
+  .companion-grid,
+  .pace-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .traveler-details {
+    grid-template-columns: 1fr;
+  }
+
+  .small-field {
+    max-width: none;
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+  .form-section {
+    padding: 28px 0;
+  }
+
+  .two-column-grid,
+  .companion-grid,
+  .pace-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pace-card {
+    min-height: auto;
+  }
+
+  .step-actions {
+    flex-direction: column;
+  }
+
+  .selection-summary {
+    text-align: center;
+  }
+
+  .next-button {
+    justify-content: space-between;
+  }
+}
+</style>
