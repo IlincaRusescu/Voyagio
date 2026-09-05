@@ -5,6 +5,7 @@ import SignIn from '../views/SignIn.vue'
 import SignUp from '../views/SignUp.vue'
 import { supabase } from '../lib/supabase'
 import CreateTripView from '../views/CreateTripView.vue'
+import ItineraryView from '../views/ItineraryView.vue'
 
 const routes = [
   {
@@ -32,7 +33,15 @@ const routes = [
   meta: {
     requiresAuth: true
   }
+  },
+  {
+  path: '/itinerary',
+  name: 'itinerary',
+  component: ItineraryView,
+  meta: {
+    requiresAuth: true
   }
+}
 ]
 
 const router = createRouter({

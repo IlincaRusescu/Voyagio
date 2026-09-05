@@ -1,5 +1,6 @@
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 
 import TripBasicsStep from '../components/create-trip/TripBasicsStep.vue'
 import InterestsStep from '../components/create-trip/InterestsStep.vue'
@@ -7,8 +8,25 @@ import StayStep from '../components/create-trip/StayStep.vue'
 import FlightsStep from '../components/create-trip/FlightsStep.vue'
 import BudgetStep from '../components/create-trip/BudgetStep.vue'
 import FinalDetailsStep from '../components/create-trip/FinalDetailsStep.vue'
+import GeneratingItinerary from '../components/create-trip/GeneratingItinerary.vue'
 
 const currentStep = ref(1)
+const router = useRouter()
+
+watch(currentStep, () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  })
+})
+
+const isGenerating = ref(false)
+
+const generationMessage = ref(
+  'Generating itinerary draft...'
+)
+
+const generationComplete = ref(false)
 
 const tripForm = reactive({
   basics: {
@@ -156,17 +174,142 @@ function previousStep() {
   }
 }
 
-function generateItinerary() {
-  console.log('Complete Voyagio trip form:', tripForm)
-
-  alert(
-    'Your trip form is complete! OpenAI generation will be connected next.'
+async function generateItinerary() {
+  console.log(
+    'Sending trip form to backend:',
+    tripForm
   )
+
+  isGenerating.value = true
+
+  generationMessage.value =
+    'Generating itinerary draft...'
+
+  generationComplete.value = false
+
+  try {
+    const response = await fetch(
+      'http://localhost:3000/api/ai/generate-itinerary',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(tripForm)
+      }
+    )
+
+    if (!response.ok) {
+      throw new Error(
+        'Could not generate itinerary'
+      )
+    }
+
+    const reader = response.body.getReader()
+    const decoder = new TextDecoder()
+
+    let buffer = ''
+    let generatedItinerary = null
+
+    while (true) {
+      const {
+        value,
+        done
+      } = await reader.read()
+
+      if (done) {
+        break
+      }
+
+      buffer += decoder.decode(
+        value,
+        {
+          stream: true
+        }
+      )
+
+      const lines = buffer.split('\n')
+
+      buffer = lines.pop()
+
+      for (const line of lines) {
+        if (!line.trim()) {
+          continue
+        }
+
+        const event = JSON.parse(line)
+
+        if (event.type === 'progress') {
+          generationMessage.value =
+            event.message
+
+          generationComplete.value =
+            event.message ===
+            'Itinerary optimization complete.'
+        }
+
+        if (event.type === 'result') {
+          generatedItinerary =
+            event.itinerary
+        }
+
+        if (event.type === 'error') {
+          throw new Error(
+            event.message
+          )
+        }
+      }
+    }
+
+    if (!generatedItinerary) {
+      throw new Error(
+        'No itinerary returned by server'
+      )
+    }
+
+    console.log(
+      'Generated itinerary:',
+      generatedItinerary
+    )
+
+    await new Promise((resolve) => {
+      setTimeout(resolve, 1800)
+    })
+
+    sessionStorage.setItem(
+      'generatedItinerary',
+      JSON.stringify(generatedItinerary)
+    )
+
+    router.push({
+      name: 'itinerary'
+    })
+  } catch (error) {
+    isGenerating.value = false
+    generationComplete.value = false
+
+    console.error(
+      'Itinerary generation failed:',
+      error
+    )
+
+    alert(
+      'Something went wrong while generating your itinerary.'
+    )
+  }
 }
 </script>
 
 <template>
   <main class="create-trip-page">
+
+    <!-- GENERATION LOADING SCREEN -->
+    <GeneratingItinerary
+      v-if="isGenerating"
+      :message="generationMessage"
+      :complete="generationComplete"
+    />
+
     <div class="create-trip-container">
 
       <!-- PAGE HEADER -->

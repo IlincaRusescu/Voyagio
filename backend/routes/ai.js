@@ -68,16 +68,74 @@ router.post('/generate-itinerary', async (req, res) => {
     })
   }
 
+  /*
+    Răspunsul nu mai este trimis tot deodată.
+
+    Backend-ul poate trimite mai multe mesaje către frontend
+    în timpul aceluiași request.
+  */
+  res.setHeader(
+    'Content-Type',
+    'application/x-ndjson; charset=utf-8'
+  )
+
+  res.setHeader(
+    'Cache-Control',
+    'no-cache, no-transform'
+  )
+
+  res.setHeader(
+    'Connection',
+    'keep-alive'
+  )
+
+  res.setHeader(
+    'X-Accel-Buffering',
+    'no'
+  )
+
+  res.flushHeaders()
+
+  if (res.socket) {
+    res.socket.setNoDelay(true)
+  }
+  
+  function sendEvent(data) {
+    res.write(`${JSON.stringify(data)}\n`)
+
+    if (typeof res.flush === 'function') {
+      res.flush()
+    }
+  }
+
+  /*
+    Trimite unul dintre mesajele de progres.
+  */
+  function sendProgress(message) {
+    console.log(message)
+
+    sendEvent({
+      type: 'progress',
+      message
+    })
+  }
+
   try {
-    console.log('Generating itinerary draft...')
+    sendProgress(
+      'Generating itinerary draft...'
+    )
 
     const draft = await generateItineraryDraft(
       tripForm
     )
 
+    /*
+      Acest log rămâne doar în terminal.
+      NU îl trimitem în frontend.
+    */
     console.log('Itinerary draft generated.')
 
-    console.log(
+    sendProgress(
       'Verifying places with Google Places...'
     )
 
@@ -85,9 +143,12 @@ router.post('/generate-itinerary', async (req, res) => {
       draft
     )
 
+    /*
+      Doar terminal.
+    */
     console.log('Place verification complete.')
 
-    console.log(
+    sendProgress(
       'Optimizing itinerary using coordinates...'
     )
 
@@ -101,27 +162,43 @@ router.post('/generate-itinerary', async (req, res) => {
       optimization
     )
 
-    console.log('Calculating final routes...')
+    sendProgress(
+      'Calculating final routes...'
+    )
 
     const itineraryWithRoutes =
       await addRoutesToItinerary(finalItinerary)
 
+    /*
+      Doar terminal.
+    */
     console.log('Final route calculation complete.')
 
-    console.log('Itinerary optimization complete.')
+    sendProgress(
+      'Itinerary optimization complete.'
+    )
 
-    return res.json({
+    /*
+      Trimitem separat rezultatul final.
+    */
+    sendEvent({
+      type: 'result',
       itinerary: itineraryWithRoutes
     })
+
+    res.end()
   } catch (error) {
     console.error(
       'Itinerary generation error:',
       error
     )
 
-    return res.status(500).json({
-      error: 'Could not generate itinerary'
+    sendEvent({
+      type: 'error',
+      message: 'Could not generate itinerary'
     })
+
+    res.end()
   }
 })
 
